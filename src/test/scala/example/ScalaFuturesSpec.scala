@@ -11,21 +11,19 @@ class ScalaFuturesSpec extends FlatSpec with ScalaFutures {
 
   var mutableSharedState = 0
   it should "not guarantee thread-safety" in {
-    info("use global execution context backed by a multi-threaded pool")
-    info("does NOT guarantee tasks will execute one after another in the order they were started")
     val f1 = Future {
       val tmp = mutableSharedState
       Thread.sleep(5000)
-      println(s"Start Future 1 with mutableSharedState=$tmp")
+      println(s"Start Future1 with mutableSharedState=$tmp in thread=${Thread.currentThread}")
       mutableSharedState = tmp + 1
-      println(s"Complete Future 1 with mutableSharedState=$mutableSharedState")
+      println(s"Complete Future1 with mutableSharedState=$mutableSharedState")
     }
 
     val f2 = Future {
       val tmp = mutableSharedState
-      println(s"Start Future 2 with mutableSharedState=$tmp")
+      println(s"Start Future2 with mutableSharedState=$tmp in thread=${Thread.currentThread}")
       mutableSharedState = tmp + 1
-      println(s"Complete Future 2 with mutableSharedState=$mutableSharedState")
+      println(s"Complete Future2 with mutableSharedState=$mutableSharedState")
     }
 
     val f = for {
